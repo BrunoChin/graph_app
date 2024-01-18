@@ -18,6 +18,7 @@ module Types
       ids.map { |id| context.schema.object_from_id(id, context) }
     end
 
+    #user
     field :user, UserType, null: false do
       argument :id, ID, required: true
     end
@@ -28,6 +29,32 @@ module Types
     field :users, [UserType], null: false, description: "List all users"
     def users
       User.all
+    end
+
+    #Post
+    field :post, PostType, null: false do
+      argument :id, ID, required:true
+    end
+    def post(id:)
+      Post.find(id)
+    end
+
+    field :posts, [PostType], null: false
+    def posts
+      Post.all
+    end
+
+    #comments
+    field :comment, CommentType, null: false do
+      argument :id, ID, required:true
+    end
+    def comment(id:)
+      Comment.find(id)
+    end
+
+    field :comments, [CommentType], null: false
+    def comments
+      Comment.all
     end
   end
 end
