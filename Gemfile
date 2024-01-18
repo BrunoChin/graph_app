@@ -63,3 +63,5 @@ end
 
 gem "graphql", "~> 2.2"
 gem "graphiql-rails", group: :development
+
+gem "rspec-rails", "~> 6.1", :groups => [:development, :test]
