@@ -5,17 +5,22 @@ module Types
 
     #user
     field :create_user, UserType, null: false do
-      argument :first_name, String, required: true
-      argument :last_name, String, required: true
+      argument :first_name, String, required: true, validates: {length: {minimum: 3, message: "O primeiro nome deve ter no mínimo 3 caracteres"}}
+      argument :last_name, String, required: true, validates: {length: {minimum: 3, message: "O sobrenome deve ter no mínimo 3 caracteres"}}
     end
     def create_user(**args)
-      User.create!(args)
+      user = User.new(args)
+      if user.save
+        user
+      else
+        raise GraphQL::ExecutionError.new("Não foi possivel criar ususario.")
+      end
     end
 
     field :update_user, UserType, null: false do
       argument :id, ID, required: true
-      argument :first_name, String, required: false
-      argument :last_name, String, required: false
+      argument :first_name, String, required: false, validates: {length: {minimum: 3, message: "O primeiro nome deve ter no mínimo 3 caracteres"}}
+      argument :last_name, String, required: false, validates: {length: {minimum: 3, message: "O sobrenome deve ter no mínimo 3 caracteres"}}
       argument :address, String, required: false
       argument :city, String, required: false
     end
@@ -26,7 +31,7 @@ module Types
       if user.update(args)
         user
       else
-        { success: false }
+        raise GraphQL::ExecutionError.new("Não foi possivel atualizar os dados do ususario.")
       end
     end
 
@@ -46,7 +51,7 @@ module Types
 
     #post
     field :create_post, PostType, null: false do
-      argument :body, String, required: true
+      argument :body, String, required: true, validates: {length: {minimum: 10}}
       argument :user_id, Integer, required: true
     end
     def create_post(**args)
@@ -55,7 +60,7 @@ module Types
 
     field :update_post, PostType, null: false do
       argument :id, ID, required: true
-      argument :body, String, required: true
+      argument :body, String, required: true, validates: {length: {minimum: 10}}
     end
     def update_post(id:, body:)
       post = Post.find(id)
